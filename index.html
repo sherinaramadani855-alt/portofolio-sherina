@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portofolio Sherina</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    
+    <style>
+        /* --- 1. SETTING DASAR --- */
+        html { scroll-behavior: smooth; }
+        
+        body {
+            font-family: 'Poppins', sans-serif; /* Font baru lebih modern */
+            background-color: #FFDAB9; 
+            text-align: center;
+            margin: 0;
+            padding: 20px;
+            user-select: none; 
+        }
+
+        /* --- 2. LAYAR FLASH (Kilat) --- */
+        #camera-flash {
+            position: fixed; top: 0; left: 0;
+            width: 100%; height: 100%;
+            background-color: white;
+            opacity: 0;
+            pointer-events: none;
+            z-index: 9999;
+            transition: opacity 0.1s ease-out;
+        }
+
+        /* --- 3. LAYAR LOADING (Khusus Email) --- */
+        #loading-screen {
+            position: fixed; top: 0; left: 0;
+            width: 100%; height: 100%;
+            background-color: rgba(255, 255, 255, 0.9); /* Putih agak transparan */
+            z-index: 10000; /* Paling atas */
+            display: none; /* Sembunyi dulu */
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Animasi Putaran (Spinner) */
+        .spinner {
+            width: 50px; height: 50px;
+            border: 5px solid #FFDAB9;
+            border-top: 5px solid #A0522D; /* Warna Cokelat */
+            border-radius: 50%;
+            animation: putar 1s linear infinite;
+            margin-bottom: 20px;
+        }
+        @keyframes putar {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .loading-text {
+            color: #A0522D;
+            font-weight: bold;
+            letter-spacing: 2px;
+            animation: kedip 1.5s infinite;
+        }
+        @keyframes kedip {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        /* --- 4. AREA KONTEN --- */
+        .container {
+            background-color: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+            max-width: 500px;
+            margin: 100px auto 50px; 
+            position: relative; 
+        }
+
+        .floating-photo {
+            width: 220px; height: auto; 
+            position: absolute;
+            top: -110px; left: 50%;
+            transform: translateX(-50%); 
+            filter: 
+                drop-shadow(3px 0 0 white) 
+                drop-shadow(-3px 0 0 white) 
+                drop-shadow(0 3px 0 white) 
+                drop-shadow(0 -3px 0 white)
+                drop-shadow(0 10px 10px rgba(0,0,0,0.2)); 
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        
+        /* Efek foto membesar dikit pas dihover mouse */
+        .floating-photo:hover {
+            transform: translateX(-50%) scale(1.05);
+        }
+
+        /* --- 5. MENU NAVIGASI --- */
+        .navbar {
+            background-color: white;
+            padding: 15px 10px;
+            border-radius: 50px;
+            display: inline-block;
+            margin-bottom: 40px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            position: relative;
+            z-index: 50;
+        }
+        .nav-item {
+            text-decoration: none;
+            color: #2c3e50;
+            font-weight: 600;
+            padding: 10px 20px;
+            border-radius: 30px;
+            transition: 0.3s;
+            cursor: pointer; /* Biar kursor jadi jari */
+        }
+        .nav-item:hover {
+            background-color: #FFDAB9; /* Background peach pas disentuh */
+            color: #A0522D;
+        }
+
+        /* --- 6. TEKS & TOMBOL --- */
+        h1 { color: #2c3e50; font-size: 28px; margin-top: 100px; }
+        p { color: #666; line-height: 1.6; margin-bottom: 25px; }
+        
+        .btn {
+            display: inline-block;
+            padding: 12px 30px;
+            background-color: #A0522D;
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: bold;
+            transition: 0.3s;
+            cursor: pointer;
+        }
+        .btn:hover {
+            background-color: #8a4524;
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(160, 82, 45, 0.3);
+        }
+/* --- TOMBOL BACA CERITANYA (SLIDE EFFECT) --- */
+    .read-btn {
+        display: inline-block;
+        padding: 8px 15px; /* Ukuran tombol kecil */
+        background-color: #FFDAB9; /* Background Peach Muda */
+        color: #A0522D !important; /* Warna Cokelat */
+        border-radius: 5px;
+        font-weight: 600; 
+        text-decoration: none;
+        transition: 0.3s;
+        font-size: 14px;
+    }
+
+    .read-btn:hover {
+        background-color: #fcece0; /* Sedikit lebih gelap saat disentuh */
+        transform: translateX(8px); /* Efek meluncur ke kanan */
+    }
+
+        .section-box {
+            background-color: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+            max-width: 500px;
+            margin: 30px auto; 
+            text-align: left; 
+        }
+        h2 {
+            color: #A0522D;
+            border-bottom: 2px solid #FFDAB9;
+            padding-bottom: 10px;
+            margin-top: 0;
+        }
+
+        .footer {
+            margin-top: 50px; padding: 20px;
+            color: #A0522D; font-size: 14px;
+        }
+        .small { font-size: 12px; opacity: 0.7; }
+/* --- MEDIA QUERY: ATURAN KHUSUS UNTUK HP/LAYAR KECIL --- */
+    @media screen and (max-width: 600px) {
+        
+        /* 1. LAYOUT UTAMA: Memberi ruang gerak */
+        body {
+            padding: 10px;
+        }
+        
+        /* 2. NAVBAR: Mengatur menu agar tetap satu baris */
+        .navbar {
+            padding: 10px 10px;
+            max-width: 90%;
+            display: flex; /* Menggunakan Flexbox agar menu sejajar */
+            justify-content: space-around;
+        }
+
+        .nav-item {
+            font-size: 14px; /* Huruf dikecilkan */
+            margin: 0 5px;
+            padding: 8px 10px;
+        }
+
+        /* 3. FOTO & JUDUL: Penyesuaian agar tidak terlalu besar */
+        .floating-photo {
+            width: 180px; /* Ukuran foto dikecilkan */
+            top: -90px; /* Naikkan sedikit agar terlihat utuh */
+        }
+
+        h1 {
+            font-size: 24px; /* Judul tidak terlalu besar */
+            margin-top: 50px; /* Jarak foto ke teks dikurangi */
+        }
+        
+        /* 4. KOTAK KONTEN: Mengurangi padding */
+        .container, .section-box {
+            padding: 20px;
+            margin-left: 10px;
+            margin-right: 10px;
+        }ss
+    </style>
+</head>
+<body>
+
+    <div id="camera-flash"></div>
+
+    <div id="loading-screen">
+        <div class="spinner"></div>
+        <div class="loading-text">CONNECTING...</div>
+    </div>
+
+    <nav class="navbar">
+        <a href="#" class="nav-item flash-trigger">Beranda</a>
+        <a href="#tentang" class="nav-item flash-trigger">Tentang</a>
+        <a href="#karya" class="nav-item flash-trigger">Karya</a>
+    </nav>
+
+   <div class="container">
+        <img src="sherina.png" alt="Sherina" class="floating-photo" id="myPhoto">
+
+        <h1>Merangkai Kata,<br>Membangun Makna. ✍️</h1>
+        
+        <p style="font-size: 16px; margin-top: 10px;">
+            Halo, Saya <strong>Sherina</strong>.<br>
+            Seorang pembelajar yang antusias menggabungkan logika sistem dan seni berbicara,
+            bercita-cita mendalami dunia <strong>Ilmu Komunikasi</strong>.
+        </p>
+        
+        <a href="mailto:sherinaramadani855@gmail.com" class="btn" id="email-btn">Let's Connect</a>
+    </div>
+
+    <div id="tentang" class="section-box">
+        <h2>🧐 Di Balik Layar</h2>
+        <p>
+            Dunia tidak hanya hitam dan putih, dan saya belajar melihat warnanya melalui 
+            <strong>literasi digital</strong>.
+        </p>
+        <p>
+            Hobi saya membaca novel digital bukan sekadar pelarian, melainkan cara saya melatih empati. 
+            Saya juga gemar mengamati isu sosial, bertanya "mengapa", dan mencari benang merah 
+            komunikasi di balik setiap tren yang terjadi.
+        </p>
+    </div>
+
+    <div id="karya" class="section-box">
+        <h2>🚀 Jejak Digital</h2>
+        
+        <p><strong>1. AI Storybook: Hening di Tengah Keramaian Hutan</strong></p>
+        <p>
+            Sebuah proyek narasi visual dari kelas <em>AI & Programming</em>. 
+            Bagi saya, ini bukan sekadar tugas teknis. Cerita di dalamnya adalah 
+            refleksi jujur dari apa yang saya rasakan—sebuah kolaborasi antara 
+            emosi manusia dan teknologi kecerdasan buatan.
+        </p>
+       <a href="https://gemini.google.com/share/6247b3857f07" target="_blank" class="read-btn">
+            Baca Ceritanya ↗
+        </a>        
+        <br><br> <p><strong>2. Personal Web Canvas (2025)</strong></p>
+        <p>
+            Website portofolio ini adalah eksperimen saya dalam memahami logika media baru. 
+            Dibangun dari nol (HTML/CSS/JS) dengan fitur interaktif seperti 
+            <em>Flash Photography</em> dan desain responsif.
+        </p>
+    </div>
+<div class="footer">
+        <p>Dibuat dengan ❤️ oleh Sherina | Calon Komunikator 2026</p>
+        <p class="small">© 2025 Sherina Portofolio</p>
+    </div>
+    <script>
+        // Ambil elemen-elemen penting
+        const flashScreen = document.getElementById('camera-flash');
+        const loadingScreen = document.getElementById('loading-screen');
+        const emailBtn = document.getElementById('email-btn');
+        const menuItems = document.querySelectorAll('.flash-trigger'); // Hanya menu
+
+        // --- FUNGSI 1: KILAT KHUSUS MENU ---
+        // Kita pasang "alat penyadap" di setiap tombol menu
+        menuItems.forEach(item => {
+            item.addEventListener('click', function() {
+                // Nyalakan Kilat
+                flashScreen.style.opacity = '0.8';
+                // Matikan Kilat (Cepat)
+                setTimeout(() => {
+                    flashScreen.style.opacity = '0';
+                }, 150);
+            });
+        });
+
+        // --- FUNGSI 2: LOADING EMAIL ---
+       // Fungsi Loading Email
+        emailBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            loadingScreen.style.display = 'flex';
+            setTimeout(() => { // BARIS INI YANG KITA UBAH
+                loadingScreen.style.display = 'none';
+                window.location.href = emailBtn.href;
+            }, 1000); // <-- UBAH ANGKA 2000 MENJADI 1000
+        });
+</script>
+</body>
+</html>
